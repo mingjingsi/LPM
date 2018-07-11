@@ -7,9 +7,9 @@
 
 using namespace Rcpp;
 
-// LPM_noX_Rcpp
-RcppExport SEXP LPM_noX_Rcpp(arma::field<arma::vec>& Pvalue, arma::field<arma::mat>& id, arma::mat& alpha, arma::mat& pi1_, arma::mat& pair_id, arma::uword maxiter, double tol, const int coreNum);
-RcppExport SEXP _LPM_LPM_noX_Rcpp(SEXP PvalueSEXP, SEXP idSEXP, SEXP alphaSEXP, SEXP pi1_SEXP, SEXP pair_idSEXP, SEXP maxiterSEXP, SEXP tolSEXP, SEXP coreNumSEXP) {
+// bLPM_noX_Rcpp
+RcppExport SEXP bLPM_noX_Rcpp(arma::field<arma::vec>& Pvalue, arma::field<arma::mat>& id, arma::mat& alpha, arma::mat& pi1_, arma::mat& pair_id, arma::uword maxiter, double tol, const int coreNum);
+RcppExport SEXP _LPM_bLPM_noX_Rcpp(SEXP PvalueSEXP, SEXP idSEXP, SEXP alphaSEXP, SEXP pi1_SEXP, SEXP pair_idSEXP, SEXP maxiterSEXP, SEXP tolSEXP, SEXP coreNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,13 +21,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::uword >::type maxiter(maxiterSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< const int >::type coreNum(coreNumSEXP);
-    rcpp_result_gen = Rcpp::wrap(LPM_noX_Rcpp(Pvalue, id, alpha, pi1_, pair_id, maxiter, tol, coreNum));
+    rcpp_result_gen = Rcpp::wrap(bLPM_noX_Rcpp(Pvalue, id, alpha, pi1_, pair_id, maxiter, tol, coreNum));
     return rcpp_result_gen;
 END_RCPP
 }
-// LPM_Rcpp
-RcppExport SEXP LPM_Rcpp(arma::field<arma::vec>& Pvalue, arma::mat& X, arma::field<arma::mat>& id, arma::mat& alpha, arma::mat& pi1_, arma::mat& pair_id, arma::uword maxiter, double tol, const int coreNum);
-RcppExport SEXP _LPM_LPM_Rcpp(SEXP PvalueSEXP, SEXP XSEXP, SEXP idSEXP, SEXP alphaSEXP, SEXP pi1_SEXP, SEXP pair_idSEXP, SEXP maxiterSEXP, SEXP tolSEXP, SEXP coreNumSEXP) {
+// bLPM_Rcpp
+RcppExport SEXP bLPM_Rcpp(arma::field<arma::vec>& Pvalue, arma::mat& X, arma::field<arma::mat>& id, arma::mat& alpha, arma::mat& pi1_, arma::mat& pair_id, arma::uword maxiter, double tol, const int coreNum);
+RcppExport SEXP _LPM_bLPM_Rcpp(SEXP PvalueSEXP, SEXP XSEXP, SEXP idSEXP, SEXP alphaSEXP, SEXP pi1_SEXP, SEXP pair_idSEXP, SEXP maxiterSEXP, SEXP tolSEXP, SEXP coreNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -40,14 +40,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::uword >::type maxiter(maxiterSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< const int >::type coreNum(coreNumSEXP);
-    rcpp_result_gen = Rcpp::wrap(LPM_Rcpp(Pvalue, X, id, alpha, pi1_, pair_id, maxiter, tol, coreNum));
+    rcpp_result_gen = Rcpp::wrap(bLPM_Rcpp(Pvalue, X, id, alpha, pi1_, pair_id, maxiter, tol, coreNum));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_LPM_LPM_noX_Rcpp", (DL_FUNC) &_LPM_LPM_noX_Rcpp, 8},
-    {"_LPM_LPM_Rcpp", (DL_FUNC) &_LPM_LPM_Rcpp, 9},
+    {"_LPM_bLPM_noX_Rcpp", (DL_FUNC) &_LPM_bLPM_noX_Rcpp, 8},
+    {"_LPM_bLPM_Rcpp", (DL_FUNC) &_LPM_bLPM_Rcpp, 9},
     {NULL, NULL, 0}
 };
 
