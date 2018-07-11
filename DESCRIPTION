@@ -8,6 +8,6 @@ Description: This package provides functions for fitting LPM, a latent probit mo
 Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 0.12.8), RcppArmadillo, RcppGSL, BH
-Depends: R (>= 3.0.0), Rcpp, BH
+Depends: R (>= 3.0.0), Rcpp, BH, RcppGSL
 LinkingTo: Rcpp, RcppArmadillo, RcppGSL, BH
 URL: https://github.com/mingjingsi/LPM
