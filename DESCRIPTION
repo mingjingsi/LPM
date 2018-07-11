@@ -1,0 +1,13 @@
+Package: LPM
+Type: Package
+Title: LPM (Latent Probit Model)
+Version: 0.1.0
+Author: Jingsi Ming and Can Yang
+Maintainer: Jingsi Ming <jsming@life.hkbu.edu.hk>
+Description: This package provides functions for fitting LPM, a latent probit model to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations.
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 0.12.8), RcppArmadillo, RcppGSL, BH
+Depends: R (>= 3.0.0), Rcpp, BH
+LinkingTo: Rcpp, RcppArmadillo, RcppGSL, BH
+URL: https://github.com/mingjingsi/LPM
