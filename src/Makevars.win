@@ -1,10 +1,20 @@
 
 ## This assume that we can call Rscript to ask Rcpp about its locations
 ## Use the R_HOME indirection to support installations of multiple R version
-PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()")
-PKG_LIBS =$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -L$(LIB_GSL)/lib/x64 -lgsl -lgslcblas -lpthread
+#PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()")
+PKG_LIBS =$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -L$(LIB_GSL)/lib/x64 -L../windows/gsl-2.4/lib${R_ARCH} -lgsl -lgslcblas -lpthread
 
-PKG_CPPFLAGS=-I$(LIB_GSL)/include -I../inst/include
+PKG_CPPFLAGS=-I../windows/gsl-2.4/include -I$(LIB_GSL)/include -I../inst/include
 ##PKG_LIBS=-L$(LIB_GSL)/lib/x64 -lgsl -lgslcblas
 ##PKG_CXXFLAGS=-I../inst/include -DARMA_64BIT_WORD
 CXX_STD = CXX11
+
+
+
+#all: clean winlibs
+
+#winlibs:
+#	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+
+#clean:
+#	rm -f $(SHLIB) $(OBJECTS)
