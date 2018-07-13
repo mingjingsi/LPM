@@ -40,7 +40,7 @@ This package contains three functions \code{LPM}, \code{bLPM} and \code{bLPM_add
   data(ExampleData)
   
   bLPMfit_first3 <- bLPM(ExampleData$data[1:3], X = ExampleData$X, coreNum = 2)
-  bLPMfit <- bLPM(ExampleData$data[1:3], ExampleData$data[4], X = ExampleData$X, bLPMfit_first3, coreNum = 2)
+  bLPMfit <- bLPM_add(ExampleData$data[1:3], ExampleData$data[4], X = ExampleData$X, bLPMfit_first3, coreNum = 2)
   LPMfit <- LPM(bLPMfit)
   
   posterior1 <- post(ExampleData$data, X = ExampleData$X, id = 1, LPMfit)
