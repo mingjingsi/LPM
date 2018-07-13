@@ -26,10 +26,10 @@ library(LPM)
 package?LPM
 ```
 
-References
-==========
+#References
+#==========
 
-Jingsi Ming, Tao Wang and Can Yang; LPM: a latent probit model to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations.
+#Jingsi Ming, Tao Wang and Can Yang; LPM: a latent probit model to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations.
 
 
 Reproducibility
