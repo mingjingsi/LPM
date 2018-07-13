@@ -346,63 +346,105 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
     fit_add <- bLPM_noX_Rcpp(Pvalue, Pvalue_pair_id, alpha_pair, pi1_pair, pair_id, maxiter, tol, coreNum)
     
     # combine original fit with added fit
-    fit_all <- list(alpha = matrix(0, 2, Npairs_all),
-                    alpha_stage1 = matrix(0, 2, Npairs_all),
-                    alpha_stage2 = matrix(0, 2, Npairs_all),
-                    beta0 = matrix(0, 2, Npairs_all),
-                    pi1_stage1 = matrix(0, 2, Npairs_all),
-                    beta0_stage2 = matrix(0, 2, Npairs_all),
-                    rho = numeric(Npairs_all),
-                    L_stage1_List = NULL,
-                    L_stage2_List = NULL,
-                    L_stage3_List = NULL)
-    temp_pair_all <- 0
-    temp_pair <- 0
-    temp_pair_add <- 0
-    for (i in 1:(K-1)){
-      for (j in (i+1):K){
-        temp_pair_all <- temp_pair_all + 1
-        temp_pair <- temp_pair + 1
-        fit_all$beta0[, temp_pair_all] <- fit$beta0[, temp_pair]
-        fit_all$beta0_stage2[, temp_pair_all] <- fit$beta0_stage2[, temp_pair]
+    if(verbose = FALSE){
+      fit_all <- list(alpha = matrix(0, 2, Npairs_all),
+                      beta0 = matrix(0, 2, Npairs_all),
+                      rho = numeric(Npairs_all),
+                      L_stage1_List = NULL,
+                      L_stage2_List = NULL,
+                      L_stage3_List = NULL)
+      temp_pair_all <- 0
+      temp_pair <- 0
+      temp_pair_add <- 0
+      for (i in 1:(K-1)){
+        for (j in (i+1):K){
+          temp_pair_all <- temp_pair_all + 1
+          temp_pair <- temp_pair + 1
+          fit_all$beta0[, temp_pair_all] <- fit$beta0[, temp_pair]
+        }
+        for (j in 1:K_add){
+          temp_pair_all <- temp_pair_all + 1
+          temp_pair_add <- temp_pair_add + 1
+          fit_all$beta0[, temp_pair_all] <- fit_add$beta0[, temp_pair_add]
+        }
       }
-      for (j in 1:K_add){
-        temp_pair_all <- temp_pair_all + 1
-        temp_pair_add <- temp_pair_add + 1
-        fit_all$beta0[, temp_pair_all] <- fit_add$beta0[, temp_pair_add]
-        fit_all$beta0_stage2[, temp_pair_all] <- fit_add$beta0_stage2[, temp_pair_add]
+      for (i in K:(K_all-1)){
+        for (j in (i+1):K_all){
+          temp_pair_all <- temp_pair_all + 1
+          temp_pair_add <- temp_pair_add + 1
+          fit_all$beta0[, temp_pair_all] <- fit_add$beta0[, temp_pair_add]
+        }
       }
+      
+      colnames(fit_all$beta0) <- name_pair_all
     }
-    for (i in K:(K_all-1)){
-      for (j in (i+1):K_all){
-        temp_pair_all <- temp_pair_all + 1
-        temp_pair_add <- temp_pair_add + 1
-        fit_all$beta0[, temp_pair_all] <- fit_add$beta0[, temp_pair_add]
-        fit_all$beta0_stage2[, temp_pair_all] <- fit_add$beta0_stage2[, temp_pair_add]
+    else{
+      fit_all <- list(alpha = matrix(0, 2, Npairs_all),
+                      alpha_stage1 = matrix(0, 2, Npairs_all),
+                      alpha_stage2 = matrix(0, 2, Npairs_all),
+                      beta0 = matrix(0, 2, Npairs_all),
+                      pi1_stage1 = matrix(0, 2, Npairs_all),
+                      beta0_stage2 = matrix(0, 2, Npairs_all),
+                      rho = numeric(Npairs_all),
+                      L_stage1_List = NULL,
+                      L_stage2_List = NULL,
+                      L_stage3_List = NULL)
+      temp_pair_all <- 0
+      temp_pair <- 0
+      temp_pair_add <- 0
+      for (i in 1:(K-1)){
+        for (j in (i+1):K){
+          temp_pair_all <- temp_pair_all + 1
+          temp_pair <- temp_pair + 1
+          fit_all$beta0[, temp_pair_all] <- fit$beta0[, temp_pair]
+          fit_all$beta0_stage2[, temp_pair_all] <- fit$beta0_stage2[, temp_pair]
+        }
+        for (j in 1:K_add){
+          temp_pair_all <- temp_pair_all + 1
+          temp_pair_add <- temp_pair_add + 1
+          fit_all$beta0[, temp_pair_all] <- fit_add$beta0[, temp_pair_add]
+          fit_all$beta0_stage2[, temp_pair_all] <- fit_add$beta0_stage2[, temp_pair_add]
+        }
       }
+      for (i in K:(K_all-1)){
+        for (j in (i+1):K_all){
+          temp_pair_all <- temp_pair_all + 1
+          temp_pair_add <- temp_pair_add + 1
+          fit_all$beta0[, temp_pair_all] <- fit_add$beta0[, temp_pair_add]
+          fit_all$beta0_stage2[, temp_pair_all] <- fit_add$beta0_stage2[, temp_pair_add]
+        }
+      }
+      
+      colnames(fit_all$beta0) <- name_pair_all
+      colnames(fit_all$beta0_stage2) <- name_pair_all
     }
-    
-    colnames(fit_all$beta0) <- name_pair_all
-    colnames(fit_all$beta0_stage2) <- name_pair_all
-    
-    if(verbose == FALSE){
-      fit$beta0_stage2 <- NULL
-    }
+
   }
   else{
     fit_add <- bLPM_Rcpp(Pvalue, X, Pvalue_X_pair_id, alpha_pair, pi1_pair, pair_id, maxiter, tol, coreNum)
     
     # combine original fit with added fit
-    fit_all <- list(alpha = matrix(0, 2, Npairs_all),
-                    alpha_stage1 = matrix(0, 2, Npairs_all),
-                    alpha_stage2 = matrix(0, 2, Npairs_all),
-                    beta = array(0, c(2, D+1, Npairs_all)),
-                    pi1_stage1 = matrix(0, 2, Npairs_all),
-                    beta_stage2 = array(0, c(2, D+1, Npairs_all)),
-                    rho = numeric(Npairs_all),
-                    L_stage1_List = NULL,
-                    L_stage2_List = NULL,
-                    L_stage3_List = NULL)
+    if(verbose == FALSE){
+      fit_all <- list(alpha = matrix(0, 2, Npairs_all),
+                      beta = array(0, c(2, D+1, Npairs_all)),
+                      rho = numeric(Npairs_all),
+                      L_stage1_List = NULL,
+                      L_stage2_List = NULL,
+                      L_stage3_List = NULL)
+    }
+    else{
+      fit_all <- list(alpha = matrix(0, 2, Npairs_all),
+                      alpha_stage1 = matrix(0, 2, Npairs_all),
+                      alpha_stage2 = matrix(0, 2, Npairs_all),
+                      beta = array(0, c(2, D+1, Npairs_all)),
+                      pi1_stage1 = matrix(0, 2, Npairs_all),
+                      beta_stage2 = array(0, c(2, D+1, Npairs_all)),
+                      rho = numeric(Npairs_all),
+                      L_stage1_List = NULL,
+                      L_stage2_List = NULL,
+                      L_stage3_List = NULL)
+    }
+    
     temp_pair_all <- 0
     temp_pair <- 0
     temp_pair_add <- 0
@@ -411,13 +453,15 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
         temp_pair_all <- temp_pair_all + 1
         temp_pair <- temp_pair + 1
         fit_all$beta[, , temp_pair_all] <- fit$beta[, , temp_pair]
-        fit_all$beta_stage2[, , temp_pair_all] <- fit$beta_stage2[, , temp_pair]
+        if(verbose == TRUE)
+          fit_all$beta_stage2[, , temp_pair_all] <- fit$beta_stage2[, , temp_pair]
       }
       for (j in 1:K_add){
         temp_pair_all <- temp_pair_all + 1
         temp_pair_add <- temp_pair_add + 1
         fit_all$beta[, , temp_pair_all] <- fit_add$beta[, , temp_pair_add]
-        fit_all$beta_stage2[, , temp_pair_all] <- fit_add$beta_stage2[, , temp_pair_add]
+        if(verbose == TRUE)
+          fit_all$beta_stage2[, , temp_pair_all] <- fit_add$beta_stage2[, , temp_pair_add]
       }
     }
     for (i in K:(K_all-1)){
@@ -425,18 +469,19 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
         temp_pair_all <- temp_pair_all + 1
         temp_pair_add <- temp_pair_add + 1
         fit_all$beta[, , temp_pair_all] <- fit_add$beta[, , temp_pair_add]
-        fit_all$beta_stage2[, , temp_pair_all] <- fit_add$beta_stage2[, , temp_pair_add]
+        if(verbose == TRUE)
+          fit_all$beta_stage2[, , temp_pair_all] <- fit_add$beta_stage2[, , temp_pair_add]
       }
     }
     
     dimnames(fit_all$beta)[[2]] <- X_name
-    dimnames(fit_all$beta_stage2)[[2]] <- X_name
     dimnames(fit_all$beta)[[3]] <- name_pair_all
-    dimnames(fit_all$beta_stage2)[[3]] <- name_pair_all
     
-    if(verbose == FALSE){
-      fit$beta_stage2 <- NULL
+    if(verbose == TRUE){
+      dimnames(fit_all$beta_stage2)[[2]] <- X_name
+      dimnames(fit_all$beta_stage2)[[3]] <- name_pair_all
     }
+ 
   }
 
   # combine original fit with added fit
@@ -448,25 +493,31 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
       temp_pair_all <- temp_pair_all + 1
       temp_pair <- temp_pair + 1
       fit_all$alpha[, temp_pair_all] <- fit$alpha[, temp_pair]
-      fit_all$alpha_stage1[, temp_pair_all] <- fit$alpha_stage1[, temp_pair]
-      fit_all$alpha_stage2[, temp_pair_all] <- fit$alpha_stage2[, temp_pair]
-      fit_all$pi1_stage1[, temp_pair_all] <- fit$pi1_stage1[, temp_pair]
       fit_all$rho[temp_pair_all] <- fit$rho[temp_pair]
       fit_all$L_stage1_List <- c(fit_all$L_stage1_List, fit$L_stage1_List[temp_pair])
       fit_all$L_stage2_List <- c(fit_all$L_stage2_List, fit$L_stage2_List[temp_pair])
       fit_all$L_stage3_List <- c(fit_all$L_stage3_List, fit$L_stage3_List[temp_pair])
+      
+      if(verbose == TRUE){
+        fit_all$alpha_stage1[, temp_pair_all] <- fit$alpha_stage1[, temp_pair]
+        fit_all$alpha_stage2[, temp_pair_all] <- fit$alpha_stage2[, temp_pair]
+        fit_all$pi1_stage1[, temp_pair_all] <- fit$pi1_stage1[, temp_pair]
+      }
     }
     for (j in 1:K_add){
       temp_pair_all <- temp_pair_all + 1
       temp_pair_add <- temp_pair_add + 1
       fit_all$alpha[, temp_pair_all] <- fit_add$alpha[, temp_pair_add]
-      fit_all$alpha_stage1[, temp_pair_all] <- fit_add$alpha_stage1[, temp_pair_add]
-      fit_all$alpha_stage2[, temp_pair_all] <- fit_add$alpha_stage2[, temp_pair_add]
-      fit_all$pi1_stage1[, temp_pair_all] <- fit_add$pi1_stage1[, temp_pair_add]
       fit_all$rho[temp_pair_all] <- fit_add$rho[temp_pair_add]
       fit_all$L_stage1_List <- c(fit_all$L_stage1_List, fit_add$L_stage1_List[temp_pair_add])
       fit_all$L_stage2_List <- c(fit_all$L_stage2_List, fit_add$L_stage2_List[temp_pair_add])
       fit_all$L_stage3_List <- c(fit_all$L_stage3_List, fit_add$L_stage3_List[temp_pair_add])
+      
+      if(verbose == TRUE){
+        fit_all$alpha_stage1[, temp_pair_all] <- fit_add$alpha_stage1[, temp_pair_add]
+        fit_all$alpha_stage2[, temp_pair_all] <- fit_add$alpha_stage2[, temp_pair_add]
+        fit_all$pi1_stage1[, temp_pair_all] <- fit_add$pi1_stage1[, temp_pair_add]
+      }
     }
   }
   for (i in K:(K_all-1)){
@@ -474,13 +525,16 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
       temp_pair_all <- temp_pair_all + 1
       temp_pair_add <- temp_pair_add + 1
       fit_all$alpha[, temp_pair_all] <- fit_add$alpha[, temp_pair_add]
-      fit_all$alpha_stage1[, temp_pair_all] <- fit_add$alpha_stage1[, temp_pair_add]
-      fit_all$alpha_stage2[, temp_pair_all] <- fit_add$alpha_stage2[, temp_pair_add]
-      fit_all$pi1_stage1[, temp_pair_all] <- fit_add$pi1_stage1[, temp_pair_add]
       fit_all$rho[temp_pair_all] <- fit_add$rho[temp_pair_add]
       fit_all$L_stage1_List <- c(fit_all$L_stage1_List, fit_add$L_stage1_List[temp_pair_add])
       fit_all$L_stage2_List <- c(fit_all$L_stage2_List, fit_add$L_stage2_List[temp_pair_add])
       fit_all$L_stage3_List <- c(fit_all$L_stage3_List, fit_add$L_stage3_List[temp_pair_add])
+      
+      if(verbose == TRUE){
+        fit_all$alpha_stage1[, temp_pair_all] <- fit_add$alpha_stage1[, temp_pair_add]
+        fit_all$alpha_stage2[, temp_pair_all] <- fit_add$alpha_stage2[, temp_pair_add]
+        fit_all$pi1_stage1[, temp_pair_all] <- fit_add$pi1_stage1[, temp_pair_add]
+      }
     }
   }
 
@@ -499,18 +553,15 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
   colnames(fit_all$R) <- name_all
   
   colnames(fit_all$alpha) <- name_pair_all
-  colnames(fit_all$alpha_stage1) <- name_pair_all
-  colnames(fit_all$alpha_stage2) <- name_pair_all
-  colnames(fit_all$pi1_stage1) <- name_pair_all
   names(fit_all$rho) <- name_pair_all
   names(fit_all$L_stage1_List) <- name_pair_all
   names(fit_all$L_stage2_List) <- name_pair_all
   names(fit_all$L_stage3_List) <- name_pair_all
   
-  if(verbose == FALSE){
-    fit$alpha_stage1 <- NULL
-    fit$alpha_stage2 <- NULL
-    fit$pi1_stage1 <- NULL
+  if(verbose == TRUE){
+    colnames(fit_all$alpha_stage1) <- name_pair_all
+    colnames(fit_all$alpha_stage2) <- name_pair_all
+    colnames(fit_all$pi1_stage1) <- name_pair_all
   }
 
   return(fit_all)
