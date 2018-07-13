@@ -14,28 +14,28 @@ library(devtools)
 install_github("mingjingsi/LPM")
 ```
 
-
+Windows users need to download [local323](http://www.stats.ox.ac.uk/pub/Rtools/goodies/multilib/local323.zip), unzip it in C:/local323 and set the Windows parameter LIB-GSL to be C:\local323.
 
 Usage
 ===========
 
-[The 'LSMM' vignette](https://github.com/mingjingsi/LSMM/blob/master/inst/doc/LSMM_package.pdf?raw=true) will provide a good start point for the genetic analysis using LSMM package. The following help page will also provide quick references for LSMM package and the example command lines:
+[The 'LPM' vignette](https://github.com/mingjingsi/LPM/blob/master/inst/doc/LPM_package.pdf?raw=true) will provide a good start point for the genetic analysis using LPM package. The following help page will also provide quick references for LPM package and the example command lines:
 
 ```
-library(LSMM)
-package?LSMM
+library(LPM)
+package?LPM
 ```
 
 References
 ==========
 
-Jingsi Ming, Mingwei Dai, Mingxuan Cai, Xiang Wan, Jin Liu, Can Yang; LSMM: A statistical approach to integrating functional annotations with genome-wide association studies, Bioinformatics, 2018, bty187, https://doi.org/10.1093/bioinformatics/bty187
+Jingsi Ming, Tao Wang and Can Yang; LPM: a latent probit model to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations.
 
 
 Reproducibility
 ==========
 
-All the simulation results can be reproduced by using the code at [sim-LSMM](https://github.com/mingjingsi/sim-LSMM).
+All the simulation results can be reproduced by using the code at [sim-LPM](https://github.com/mingjingsi/sim-LPM).
 
 
 Development
