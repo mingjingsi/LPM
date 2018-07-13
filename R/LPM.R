@@ -346,7 +346,7 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
     fit_add <- bLPM_noX_Rcpp(Pvalue, Pvalue_pair_id, alpha_pair, pi1_pair, pair_id, maxiter, tol, coreNum)
     
     # combine original fit with added fit
-    if(verbose = FALSE){
+    if(verbose == FALSE){
       fit_all <- list(alpha = matrix(0, 2, Npairs_all),
                       beta0 = matrix(0, 2, Npairs_all),
                       rho = numeric(Npairs_all),
