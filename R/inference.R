@@ -5,10 +5,12 @@ library(mvtnorm)
 # calculate posterior based on one trait
 post <- function(data, X = NULL, id, LPMfit){
   
+  if (length(data) != length(id))
+    stop("data should be a list of the same length of id.")
+  
   if(length(id) == 1){
+    
     if (is.null(X)){
-      posterior <- data[[1]]
-      
       Phi <- pnorm(LPMfit$beta[id])
       
       comp.pi1 <- Phi*LPMfit$alpha[id]*data[[1]]$p^(LPMfit$alpha[id] - 1)
@@ -16,8 +18,7 @@ post <- function(data, X = NULL, id, LPMfit){
       comp.L <- comp.pi1 + comp.pi0
       post <- comp.pi1/comp.L
       
-      posterior$posterior <- post
-      posterior$p <- NULL
+      posterior <- data.frame(SNP = data[[1]]$SNP, posterior = post)
       
     }
     else{
