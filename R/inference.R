@@ -515,6 +515,7 @@ test_beta <- function(data, X, id, LPMfit){
   data_X <- merge(data[[id]], X, by = "SNP")
   
   D <- ncol(X)
+  M <- nrow(data_X)
   
   current_X <- as.matrix(cbind(rep(1, nrow(data_X)), data_X[, 3:(D+1)]))
   alpha <- LPMfit$alpha[id]
