@@ -14,7 +14,7 @@ library(devtools)
 install_github("mingjingsi/LPM")
 ```
 
-Windows users need to download [local323](http://www.stats.ox.ac.uk/pub/Rtools/goodies/multilib/local323.zip), unzip it in C:/local323 and set the Windows parameter LIB-GSL to be C:\local323.
+Windows users need to download [local323](http://www.stats.ox.ac.uk/pub/Rtools/goodies/multilib/local323.zip), unzip it in C:/local323 and set the Windows parameter LIB-GSL to be C:\local323. Mac users need to install GNU Scientific Library (GSL).
 
 Usage
 ===========
