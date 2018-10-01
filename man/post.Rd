@@ -12,7 +12,7 @@ post(data, X = NULL, id, LPMfit)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-     A list of dataframes which contains SNP IDs and p-values for multiple GWASs, the length is the number of GWASs.
+     A list of dataframes which contains SNP IDs and p-values for the target GWASs, the length is the number of GWASs considered.
 }
   \item{X}{
      Design matrix of functional annotations without intercept, where row and column correspond to SNP and annotation, respectively. Default is \code{NULL}.
@@ -77,7 +77,7 @@ Jingsi Ming
 \examples{
 data(ExampleData)
 
-posterior1 <- post(ExampleData$data, X = ExampleData$X, id = 1, LPMfit)
+posterior1 <- post(ExampleData$data[1], X = ExampleData$X, id = 1, LPMfit)
 
-posterior13 <- post(ExampleData$data, X = ExampleData$X, id = c(1, 3), LPMfit)
+posterior13 <- post(ExampleData$data[c(1, 3)], X = ExampleData$X, id = c(1, 3), LPMfit)
 }
