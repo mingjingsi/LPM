@@ -1,0 +1,151 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+\documentclass[11pt]{article}
+%% Set my margins
+\setlength{\oddsidemargin}{0.0truein}
+\setlength{\evensidemargin}{0.0truein}
+\setlength{\textwidth}{6.5truein}
+\setlength{\topmargin}{0.0truein}
+\setlength{\textheight}{9.0truein}
+\setlength{\headsep}{0.0truein}
+\setlength{\headheight}{0.0truein}
+\setlength{\topskip}{0pt}
+%% End of margins
+
+% \usepackage{subfigure}
+
+%%\pagestyle{myheadings}
+%%\markboth{$Date$\hfil$Revision$}{\thepage}
+\usepackage[pdftex,
+bookmarks,
+bookmarksopen,
+pdfauthor={Jingsi Ming},
+pdftitle={LPM Vignette}]
+{hyperref}
+
+\title{`\texttt{LPM}' Package to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations}
+\author{Jingsi Ming$~^1$, Tao Wang$~^2$, and Can Yang$~^1$\\
+\\
+$~^1$ Department of Mathematics, The Hong Kong University of Science and Technology,\\
+Hong Kong.\\
+$~^2$ Department of Bioinformatics and Biostatistics, Shanghai Jiao Tong University,\\
+Shanghai, China.\\
+}
+
+\date{\today}
+
+\SweaveOpts{engine=R, echo=TRUE, pdf=TRUE}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+
+\section{Overview}
+
+This vignette provides an introduction to the `\texttt{LPM}' package.
+R package `\texttt{LPM}' implements LPM (Latent Probit Model), an efficient statistical approach to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations. It provides model parameter estimation as well as statistical inference.
+
+The package can be loaded with the command:
+
+<<preliminaries,echo=FALSE,results=hide>>=
+options(prompt = "R> ")
+@
+
+<<LSMM-prelim>>=
+library("LPM")
+@
+
+This vignette is organized as follows.
+Section \ref{fitting} discusses how to fit LPM in various settings.
+Section \ref{association} explains command lines for statistical inference for identification of risk SNPs using LPM.
+Section \ref{relationship-test} explains command lines for the relationship test among traits.
+Section \ref{annotation-enrichment} explains command lines for the hypothesis testing of annotation enrichment.
+
+Please feel free to contact Can Yang at \texttt{macyang@ust.hk} for any questions or suggestions regarding the `\texttt{LPM}' package.
+
+\section{Workflow}\label{workflow}
+
+In this vignette, we use the simulated ExampleData in the package. The number of GWASs, SNPs and functional annotations are $K=4$, $M=100,000$ and $D=5$ respectively. Users can find the $P$-value for these GWASs in the `\texttt{ExampleData\$data}', design matrix of functional annotations in `\texttt{ExampleData\$X}.
+
+<<LPMExample-prelim>>=
+data(ExampleData)
+length(ExampleData$data)
+dim(ExampleData$data[[1]])
+head(ExampleData$data[[1]])
+dim(ExampleData$X)
+@
+Note that our package does not require the number of SNPs for GWASs to be the same.
+
+\subsection{Fitting the LPM}\label{fitting}
+
+We are now ready to fit LPM using the data described above (\texttt{ExampleData\$data} and \texttt{ExampleData\$X}). We first fit pairs of GWASs using \texttt{bLPM} and then obtain the estimates for LPM. R package \texttt{LPM} provides flexible analysis framework and automatically adjusts its model structure based on the provided data.
+
+We can fit bLPM without or with annotation data using differenct numbers of cores with the command:
+<<bLPM-noX,eval=FALSE>>=
+bLPMfit_noX <- bLPM(data = ExampleData$data, coreNum = 3)
+@
+or
+<<bLPM-X,eval=FALSE>>=
+bLPMfit <- bLPM(data = ExampleData$data, X = ExampleData$X, coreNum = 3)
+@
+Equivalently, we can first fit bLPM for the first three GWASs and then add the fourth GWAS.
+<<bLPM-X-add,eval=TRUE,results=hide>>=
+bLPMfit_first3 <- bLPM(data = ExampleData$data[1:3], X = ExampleData$X, coreNum = 3)
+bLPMfit <- bLPM_add(data = ExampleData$data[1:3], data_add = ExampleData$data[4], 
+                    X = ExampleData$X, bLPMfit_first3, coreNum = 3)
+@
+
+`\texttt{bLPMfit}' is a list containing parameter estimation and the value of lower bound of log-likelihood.
+<<bLPM-show>>=
+str(bLPMfit)
+@
+
+Then we can obtain the parameter estimation of LPM using the command:
+<<LPM,eval=TRUE,results=hide>>=
+LPMfit <- LPM(bLPMfit)
+@
+<<LPM-show>>=
+LPMfit
+@
+
+\subsection{Statistical inference for identification of risk SNPs}\label{association}
+Now, based on the fitted LPM, we can make statistical inference for identification of risk SNPs for one or more traits.
+<<LPM-post>>=
+posterior1 <- post(ExampleData$data[1], X = ExampleData$X, id = 1, LPMfit)
+posterior13 <- post(ExampleData$data[c(1, 3)], X = ExampleData$X, id = c(1, 3), LPMfit)
+str(posterior1)
+str(posterior13)
+@
+`\texttt{post}' function returns list of posterior. For two GWASs, `\texttt{post.joint}' means the posteriors that each SNP is associated with both the two target GWASs, `\texttt{post.marginal1}' and `\texttt{post.marginal2}' means the posteriors that each SNP is associated with only the first target GWAS and the second target GWAS respectively. 
+<<LPM-assoc>>=
+assoc1 <- assoc(posterior1, FDRset = 0.1, fdrControl = "global")
+assoc13 <- assoc(posterior13, FDRset = 0.1, fdrControl = "global")
+str(assoc1)
+str(assoc13)
+table(assoc1$eta)
+table(assoc13$eta.marginal1)
+table(assoc13$eta.joint)
+@
+`\texttt{assoc}' function returns binary values indicating association of SNPs for differenct traits, where one indicates association and zero otherwise. `\texttt{assoc}' allows both local (`\texttt{fdrControl="local"}') and global FDR controls (`\texttt{fdrControl="global"}') and users can set the threshold using the argument `\texttt{FDRset}'.
+
+\subsection{Relationship test among traits}\label{relationship-test}
+We can test the relationship among traits based on the results of pairwise analysis.
+<<LPM-test-rho>>=
+p_value_test_rho <- test_rho(bLPMfit)
+p_value_test_rho
+@
+`\texttt{test\_rho}' function returns matrix of p-values for the relationship test between pairs of traits. 
+
+\subsection{Hypothesis testing of annotation enrichment}\label{annotation-enrichment}
+When we integrate functional annotation data, we are interested in the enrichment of annotation for a specific trait. We can implement the hypothesis testing for annotation enrichment using `\texttt{test\_beta}' method:
+<<LPM-test-beta>>=
+result_test_beta <- test_beta(ExampleData$data, X = ExampleData$X, id = 1, LPMfit)
+result_test_beta
+@
+`\texttt{test\_beta}' function returns the p-values of the hypothesis testing of annotation enrichment and standard errors of the estimates for the trait. 
+
+\begin{thebibliography}{99}
+Jingsi Ming, Tao Wang, Can Yang; LPM: a latent probit model to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations.
+
+\end{thebibliography}
+
+\end{document}
