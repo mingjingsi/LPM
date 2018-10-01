@@ -43,8 +43,8 @@ This package contains three functions \code{LPM}, \code{bLPM} and \code{bLPM_add
   bLPMfit <- bLPM_add(ExampleData$data[1:3], ExampleData$data[4], X = ExampleData$X, bLPMfit_first3, coreNum = 2)
   LPMfit <- LPM(bLPMfit)
   
-  posterior1 <- post(ExampleData$data, X = ExampleData$X, id = 1, LPMfit)
-  posterior13 <- post(ExampleData$data, X = ExampleData$X, id = c(1, 3), LPMfit)
+  posterior1 <- post(ExampleData$data[1], X = ExampleData$X, id = 1, LPMfit)
+  posterior13 <- post(ExampleData$data[c(1, 3)], X = ExampleData$X, id = c(1, 3), LPMfit)
   assoc.SNP <- assoc(posterior1, FDRset = 0.1, fdrControl = "global")
   
   p_value_test_rho <- test_rho(bLPMfit)
