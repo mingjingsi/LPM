@@ -572,7 +572,7 @@ LPM <- function(bLPMfit){
   current_pair <- 0
   alpha <- numeric(K)
   
-  if (is.null(bLPMfit$beta)){
+  if (length(dim(bLPMfit$beta)) == 2){
     beta <- numeric(K)
     for (i in 1:(K-1)){
       for (j in (i+1):K){
