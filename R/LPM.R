@@ -119,20 +119,18 @@ bLPM <- function(data, X = NULL, alpha = NULL, pi1_ = NULL, maxiter = 1e4, tol =
     colnames(fit$beta0_stage2) <- name_pair
     
     # compute R
-    if (pair == FALSE){
-      fit$R <- matrix(0, K, K)
-      temp_pair <- 0
-      for (i in 1:(K-1)){
-        for (j in (i+1):K){
-          temp_pair <- temp_pair + 1
-          fit$R[i, j] <- fit$rho[temp_pair]
-        }
+    fit$R <- matrix(0, K, K)
+    temp_pair <- 0
+    for (i in 1:(K-1)){
+      for (j in (i+1):K){
+        temp_pair <- temp_pair + 1
+        fit$R[i, j] <- fit$rho[temp_pair]
       }
-      fit$R <- fit$R + t(fit$R)
-      diag(fit$R) <- 1
-      rownames(fit$R) <- name
-      colnames(fit$R) <- name
     }
+    fit$R <- fit$R + t(fit$R)
+    diag(fit$R) <- 1
+    rownames(fit$R) <- name
+    colnames(fit$R) <- name
     
     if(verbose == FALSE){
       fit$beta0_stage2 <- NULL
