@@ -35,7 +35,7 @@ Jingsi Ming, Tao Wang and Can Yang; LPM: a latent probit model to characterize r
 Reproducibility
 ==========
 
-All the simulation results can be reproduced by using the code at [sim-LPM](https://github.com/mingjingsi/sim-LPM). Real data sets used in the paper have been made publicly available, including functional annotations [link](https://drive.google.com/file/d/1Jn_MEDJVZR16UB3lXFjNjAuQDCKECfUw/view) and summary statistics from GWAS [link] (https://drive.google.com/file/d/1vXZX1l5IWXEx9De0psprR5GCniI3VG0l/view).
+All the simulation results can be reproduced by using the code at [sim-LPM](https://github.com/mingjingsi/sim-LPM). Real data sets used in the paper have been made publicly available, including functional annotations [link](https://drive.google.com/file/d/1Jn_MEDJVZR16UB3lXFjNjAuQDCKECfUw/view) and summary statistics from GWAS [link](https://drive.google.com/file/d/1vXZX1l5IWXEx9De0psprR5GCniI3VG0l/view).
 
 
 Development
