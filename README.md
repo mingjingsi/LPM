@@ -3,6 +3,8 @@ LPM
 
 LPM (Latent Probit Model), is an efficient statistical approach to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations. 'LPM' package provides model parameter estimation as well as statistical inference.
 
+To make LPM scalable to millions of SNPs and hundreds of traits, instead of working with a bruteforce algorithm to handle all the data simultaneously, we develope an efficient parameter-expanded EM (PX-EM) algorithm for pair-wise analysis and implement a dynamic threading strategy to enhance its parallel property. This pairwise strategy is guaranteed to give consistent results by our theoretical analysis from the perspective of the composite likelihood approach.
+
 Installation
 ===========
 
