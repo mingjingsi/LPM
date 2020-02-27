@@ -33,6 +33,9 @@ References
 
 Jingsi Ming, Tao Wang, Can Yang, LPM: a latent probit model to characterize the relationship among complex traits using summary statistics from multiple GWASs and functional annotations, Bioinformatics, , btz947, https://doi.org/10.1093/bioinformatics/btz947
 
+[LPM paper](https://github.com/mingjingsi/LPM/blob/master/paper_suppl/LPM.pdf)
+[LPM supplement](https://github.com/mingjingsi/LPM/blob/master/paper_suppl/LPM%20-%20Supplement.pdf)
+
 
 Reproducibility
 ==========
