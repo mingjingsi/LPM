@@ -59,6 +59,7 @@ Section \ref{fitting} discusses how to fit LPM in various settings.
 Section \ref{association} explains command lines for statistical inference for identification of risk SNPs using LPM.
 Section \ref{relationship-test} explains command lines for the relationship test among traits.
 Section \ref{annotation-enrichment} explains command lines for the hypothesis testing of annotation enrichment.
+Section \ref{single-GWAS} explains command lines for analysis of single GWAS.
 
 Please feel free to contact Can Yang at \texttt{macyang@ust.hk} for any questions or suggestions regarding the `\texttt{LPM}' package.
 
@@ -90,7 +91,7 @@ bLPMfit <- bLPM(data = ExampleData$data, X = ExampleData$X, coreNum = 3)
 Equivalently, we can first fit bLPM for the first three GWASs and then add the fourth GWAS.
 <<bLPM-X-add,eval=TRUE,results=hide>>=
 bLPMfit_first3 <- bLPM(data = ExampleData$data[1:3], X = ExampleData$X, coreNum = 3)
-bLPMfit <- bLPM_add(data = ExampleData$data[1:3], data_add = ExampleData$data[4], 
+bLPMfit <- bLPM_add(data = ExampleData$data[1:3], data_add = ExampleData$data[4],
                     X = ExampleData$X, bLPMfit_first3, coreNum = 3)
 @
 
@@ -115,7 +116,7 @@ posterior13 <- post(ExampleData$data[c(1, 3)], X = ExampleData$X, id = c(1, 3), 
 str(posterior1)
 str(posterior13)
 @
-`\texttt{post}' function returns list of posterior. For two GWASs, `\texttt{post.joint}' means the posteriors that each SNP is associated with both the two target GWASs, `\texttt{post.marginal1}' and `\texttt{post.marginal2}' means the posteriors that each SNP is associated with only the first target GWAS and the second target GWAS respectively. 
+`\texttt{post}' function returns list of posterior. For two GWASs, `\texttt{post.joint}' means the posteriors that each SNP is associated with both the two target GWASs, `\texttt{post.marginal1}' and `\texttt{post.marginal2}' means the posteriors that each SNP is associated with only the first target GWAS and the second target GWAS respectively.
 <<LPM-assoc>>=
 assoc1 <- assoc(posterior1, FDRset = 0.1, fdrControl = "global")
 assoc13 <- assoc(posterior13, FDRset = 0.1, fdrControl = "global")
@@ -133,7 +134,7 @@ We can test the relationship among traits based on the results of pairwise analy
 p_value_test_rho <- test_rho(bLPMfit)
 p_value_test_rho
 @
-`\texttt{test\_rho}' function returns matrix of p-values for the relationship test between pairs of traits. 
+`\texttt{test\_rho}' function returns matrix of p-values for the relationship test between pairs of traits.
 
 \subsection{Hypothesis testing of annotation enrichment}\label{annotation-enrichment}
 When we integrate functional annotation data, we are interested in the enrichment of annotation for a specific trait. We can implement the hypothesis testing for annotation enrichment using `\texttt{test\_beta}' method:
@@ -141,7 +142,26 @@ When we integrate functional annotation data, we are interested in the enrichmen
 result_test_beta <- test_beta(ExampleData$data, X = ExampleData$X, id = 1, LPMfit)
 result_test_beta
 @
-`\texttt{test\_beta}' function returns the p-values of the hypothesis testing of annotation enrichment and standard errors of the estimates for the trait. 
+`\texttt{test\_beta}' function returns the p-values of the hypothesis testing of annotation enrichment and standard errors of the estimates for the trait.
+
+\subsection{Analysis for single GWAS}\label{single-GWAS}
+The `\texttt{LPM}' package can also analyze single GWAS. 
+We can fit \texttt{single\_LPM} without or with annotation data with the command:
+<<single-LPM-noX>>=
+single_LPMfit_noX <- single_LPM(data = ExampleData$data$P1)
+@
+or
+<<single-LPM-X>>=
+single_LPMfit <- single_LPM(data = ExampleData$data$P1, X = ExampleData$X)
+@
+We can also make statistical inference for identification of risk SNPs
+<<single-LPM-assoc,eval=FALSE>>=
+single_assoc <- assoc(single_LPMfit$pi1, FDRset = 0.1, fdrControl = "global")
+@
+and annotation enrichment
+<<single-LPM-test-beta,eval=FALSE>>=
+single_test_beta <- test_beta(ExampleData$data, X = ExampleData$X, id = 1, single_LPMfit)
+@
 
 \begin{thebibliography}{99}
 Jingsi Ming, Tao Wang, Can Yang; LPM: a latent probit model to characterize relationship among complex traits using summary statistics from multiple GWASs and functional annotations.
