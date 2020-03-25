@@ -44,10 +44,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// single_LPM_noX_Rcpp
+RcppExport SEXP single_LPM_noX_Rcpp(arma::vec& Pvalue, double& alpha, double& pi1_, arma::uword maxiter, double tol);
+RcppExport SEXP _LPM_single_LPM_noX_Rcpp(SEXP PvalueSEXP, SEXP alphaSEXP, SEXP pi1_SEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type Pvalue(PvalueSEXP);
+    Rcpp::traits::input_parameter< double& >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double& >::type pi1_(pi1_SEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type maxiter(maxiterSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(single_LPM_noX_Rcpp(Pvalue, alpha, pi1_, maxiter, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// single_LPM_Rcpp
+RcppExport SEXP single_LPM_Rcpp(arma::vec& Pvalue, arma::mat& X, double& alpha, double& pi1_, arma::uword maxiter, double tol);
+RcppExport SEXP _LPM_single_LPM_Rcpp(SEXP PvalueSEXP, SEXP XSEXP, SEXP alphaSEXP, SEXP pi1_SEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type Pvalue(PvalueSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double& >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double& >::type pi1_(pi1_SEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type maxiter(maxiterSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(single_LPM_Rcpp(Pvalue, X, alpha, pi1_, maxiter, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_LPM_bLPM_noX_Rcpp", (DL_FUNC) &_LPM_bLPM_noX_Rcpp, 8},
     {"_LPM_bLPM_Rcpp", (DL_FUNC) &_LPM_bLPM_Rcpp, 9},
+    {"_LPM_single_LPM_noX_Rcpp", (DL_FUNC) &_LPM_single_LPM_noX_Rcpp, 5},
+    {"_LPM_single_LPM_Rcpp", (DL_FUNC) &_LPM_single_LPM_Rcpp, 6},
     {NULL, NULL, 0}
 };
 
