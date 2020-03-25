@@ -12,4 +12,7 @@ void Update_beta_noX(const mat& Pvalue, const uword M, vec& alpha, vec& beta, ma
 void Update_beta(const mat& Pvalue, const mat& X, const uword M, vec& alpha, mat& beta,
                  mat& pi1, uword& iter_times, vec& LL, const uword maxiter, const double tol);
 
+void Update_beta_single(const vec& Pvalue, const mat& X, const uword M, double& alpha, vec& beta,
+                        vec& pi1, uword& iter_times, vec& LL, const uword maxiter, const double tol);
+
 #endif

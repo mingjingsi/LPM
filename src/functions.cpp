@@ -52,6 +52,11 @@ vec qnorm(vec x){
   return q;
 }
 
+double qnorm(double x){
+  double q = gsl_cdf_ugaussian_Pinv(x);
+  return q;
+}
+
 mat pow_mat_vec(mat x, vec y){
   uword M = x.n_rows;
   mat pow_x_y = zeros<mat>(M, 2);

@@ -3,6 +3,9 @@
 #include <RcppArmadillo.h>
 #include <RcppGSL.h>
 #include "bLPM_aux.hpp"
+#include "Update_alpha.hpp"
+#include "Update_beta.hpp"
+#include "functions.hpp"
 #include "cdf_bivnorm.hpp"
 using namespace Rcpp;
 using namespace arma;
@@ -140,3 +143,61 @@ RcppExport SEXP bLPM_Rcpp(arma::field<arma::vec>& Pvalue, arma::mat& X, arma::fi
   return ret;
 }
 
+
+// [[Rcpp::export]]
+RcppExport SEXP single_LPM_noX_Rcpp(arma::vec& Pvalue, double& alpha, double& pi1_, 
+                                    arma::uword maxiter, double tol){
+  
+  uword M = Pvalue.n_rows;
+  vec fit_pi1 = zeros<vec>(M);
+  vec LL_all = zeros<vec>(maxiter+1);
+  uword iter_times = 0;
+
+  Update_alpha_single(Pvalue, M, alpha, pi1_, fit_pi1, iter_times, LL_all, maxiter, tol);
+
+  vec LL = LL_all.subvec(0, iter_times-1);
+  
+  Rcpp::List ret;
+  ret["alpha"] = alpha;
+  ret["pi1"] = fit_pi1;
+  ret["LL"] = LL;
+  
+  return ret;
+}
+
+// [[Rcpp::export]]
+RcppExport SEXP single_LPM_Rcpp(arma::vec& Pvalue, arma::mat& X, double& alpha, double& pi1_,
+                                arma::uword maxiter=1e4, double tol=1e-6){
+
+  uword M = Pvalue.n_rows;
+  uword D = X.n_cols;
+
+  // Stage 1 (update alpha)
+  double alpha_stage1 = alpha;
+  vec pi1_stage1 = zeros<vec>(M);
+  uword iter_times_stage1 = 0;
+  vec L_stage1 = zeros<vec>(maxiter+1);
+  Update_alpha_single(Pvalue, M, alpha_stage1, pi1_, pi1_stage1, iter_times_stage1, L_stage1, maxiter, tol);
+  vec LL_stage1 = L_stage1.subvec(0, iter_times_stage1-1);
+  
+  // Stage 2 (update beta)
+  double fit_alpha = alpha_stage1;
+  vec fit_beta = zeros<vec>(D);
+  fit_beta(0) = -qnorm(1 - pi1_);
+  vec fit_pi1 = zeros<vec>(M);
+  uword iter_times_stage2 = 0;
+  vec L_stage2 = zeros<vec>(maxiter+1);
+  Update_beta_single(Pvalue, X, M, fit_alpha, fit_beta, fit_pi1, iter_times_stage2, L_stage2, maxiter, tol);
+  vec LL_stage2 = L_stage2.subvec(0, iter_times_stage2-1);
+
+  Rcpp::List ret;
+  ret["alpha"] = fit_alpha;
+  ret["alpha_stage1"] = alpha_stage1;
+  ret["beta"] = fit_beta;
+  ret["pi1"] = fit_pi1;
+  ret["pi1_stage1"] = pi1_stage1;
+  ret["L_stage1_List"] = LL_stage1;
+  ret["L_stage2_List"] = LL_stage2;
+
+  return ret;
+}

@@ -17,6 +17,8 @@ mat dnorm_mat(mat x);
 
 vec qnorm(vec x);
 
+double qnorm(double x);
+
 mat pow_mat_vec(mat x, vec y);
 
 
