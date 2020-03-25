@@ -210,18 +210,29 @@ post <- function(data, X = NULL, id, LPMfit){
 ##### inference for associated SNPs #####
 assoc <- function(post, FDRset = 0.1, fdrControl){
   K <- ncol(post)
-
-  eta <- post
-
-  for (k in 2:K){
-    
-    eta[, k] <- 0
-    
+  
+  if (K == 1){
+    eta <- numeric(length(post))
     if (fdrControl == "global"){
-      eta[which(post2FDR(post[, k]) <= FDRset), k] <- 1
+      eta[which(post2FDR(post) <= FDRset)] <- 1
     }
     if (fdrControl == "local"){
-      eta[which((1 - post[, k]) <= FDRset), k] <- 1
+      eta[which((1 - post) <= FDRset)] <- 1
+    }
+  }
+  else{
+    eta <- post
+    
+    for (k in 2:K){
+      
+      eta[, k] <- 0
+      
+      if (fdrControl == "global"){
+        eta[which(post2FDR(post[, k]) <= FDRset), k] <- 1
+      }
+      if (fdrControl == "local"){
+        eta[which((1 - post[, k]) <= FDRset), k] <- 1
+      }
     }
   }
   
@@ -289,9 +300,16 @@ test_beta <- function(data, X, id, LPMfit){
   M <- nrow(data_X)
   
   current_X <- as.matrix(cbind(rep(1, nrow(data_X)), data_X[, 3:(D+1)]))
-  alpha <- LPMfit$alpha[id]
-  beta <- LPMfit$beta[id, ]
   Pvalue <- data_X[, 2]
+  
+  if (length(LPMfit$alpha) == 1){
+    alpha <- LPMfit$alpha
+    beta <- LPMfit$beta
+  }
+  else{
+    alpha <- LPMfit$alpha[id]
+    beta <- LPMfit$beta[id, ]
+  }
   
   Xbeta <- as.vector(current_X%*%(as.matrix(beta)))
   Phi <- pnorm(Xbeta)

@@ -42,6 +42,9 @@ bLPM <- function(data, X = NULL, alpha = NULL, pi1_ = NULL, maxiter = 1e4, tol =
       stop("pi1_ should be a vector of the same length of data.")
   }
   
+  # report information
+  message("Info: Number of GWASs: ", K)
+  
   # names and initial values for pair-wise GWAS
   Npairs     <- K*(K-1)/2            # No. of pairs
   name_pair  <- numeric(Npairs)      # name of pairs
@@ -58,9 +61,6 @@ bLPM <- function(data, X = NULL, alpha = NULL, pi1_ = NULL, maxiter = 1e4, tol =
       pair_id[, temp_pair]    <- c(i, j)
     }
   }
-  
-  # report information
-  message("Info: Number of GWASs: ", K)
   
   # extract p-values
   Pvalue <- NULL
@@ -563,6 +563,69 @@ bLPM_add <- function(data, data_add, X = NULL, fit, maxiter = 1e4, tol = 1e-8, c
   }
 
   return(fit_all)
+}
+
+single_LPM <- function(data, X = NULL, alpha = 0.1, pi1_ = 0.1, maxiter = 1e4, tol = 1e-8, verbose = FALSE){
+  
+  # quality control for p-values
+  No_small_p <- 0
+  # check whether p-values are in [0, 1]
+  if (any(data$p < 0 | data$p > 1)) {
+    stop("Some p-values are smaller than zero or larger than one. p-value should be ranged between zero and one." )
+  }
+  # set zero p-values to small values to avoid log(0)
+  if (any(data$p < 1e-30)) {
+    No_small_p <- sum(data$p < 1e-30)
+    data$p[data$p < 1e-30] <- 1e-30
+  }  
+    
+  if (No_small_p != 0){
+    message("Info: Some SNPs have p-values close to zero." )
+    message("Info: Number of SNPs with p-values close to zero: ", No_small_p)
+    message("Info: p-values for these SNPs are set to ", 1e-30 )
+  }
+  
+  # report information
+  message("Info: Number of GWASs: ", 1)
+  
+  # extract p-values
+  Pvalue <- data$p
+  
+  # check whether covariates are inputted
+  if (is.null(X)) {
+    D <- 0                   # No. of covariates
+  }
+  else {
+    D <- ncol(X) - 1                                # No. of covariates
+    X <- data.frame(intercept = rep(1, nrow(X)), X) # add a colume of 1 as the intercept
+    X$SNP <- NULL
+    X_name <- names(X) # name of covariates
+    X <- as.matrix(X)
+  }
+  
+  rm(data)
+  
+  # report information
+  message("Info: Number of covariates: ", D)
+  
+  # fit single_LPM
+  if (D == 0) {
+    # If no covarites
+    fit <- single_LPM_noX_Rcpp(Pvalue, alpha, pi1_, maxiter, tol)
+  }
+  else{
+    fit <- single_LPM_Rcpp(Pvalue, X, alpha, pi1_, maxiter, tol)
+
+    names(fit$beta) <- X_name
+  }
+
+  if(verbose == FALSE){
+    fit$alpha_stage1 <- NULL
+    fit$pi1_stage1 <- NULL
+  }
+  
+  return(fit)
+  
 }
 
 LPM <- function(bLPMfit){
