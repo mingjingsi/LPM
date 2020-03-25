@@ -2,5 +2,5 @@ useDynLib(LPM)
 
 import(Rcpp)
 
-export(bLPM, bLPM_add, LPM, post, assoc, test_rho, test_beta, test_beta_louise)
+export(bLPM, bLPM_add, single_LPM, LPM, post, assoc, test_rho, test_beta, test_beta_louise)
 
