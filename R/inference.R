@@ -336,7 +336,7 @@ test_beta <- function(data, X, id, LPMfit){
   se <- sqrt(diag(inv_H)[-1])
   p_value <- pchisq(W, 1, lower.tail = F)
   
-  return(list(p_value = p_value, se = se))
+  return(list(estimate = beta, se = se, chisq = W, p_value = p_value))
 }
 
 # Louise method
@@ -383,5 +383,5 @@ test_beta_louise <- function(data, X, id, LPMfit){
   se <- sqrt(diag(invI)[-1])
   p_value <- pchisq(W, 1, lower.tail = F)
 
-  return(list(p_value = p_value, se = se))
+  return(list(estimate = beta, se = se, chisq = W, p_value = p_value))
 }
