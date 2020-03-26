@@ -387,7 +387,7 @@ test_beta_louise <- function(data, X, id, LPMfit){
 
   invI <- solve(I)
 
-  W <- LPMfit$beta[id, ]^2/diag(invI)[-1]
+  W <- beta^2/diag(invI)[-1]
   se <- sqrt(diag(invI)[-1])
   p_value <- pchisq(W, 1, lower.tail = F)
 
