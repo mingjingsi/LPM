@@ -278,7 +278,7 @@ test_rho <- function(bLPMfit){
       current_pair <- current_pair + 1
       lambda <- 2*(bLPMfit$L_stage3_List[[current_pair]][length(bLPMfit$L_stage3_List[[current_pair]])] -
               bLPMfit$L_stage2_List[[current_pair]][length(bLPMfit$L_stage2_List[[current_pair]])])
-      p_value[i, j] <- 1 - pchisq(lambda, 1)
+      p_value[i, j] <- pchisq(lambda, 1, lower.tail = F)
     }
   }
 
@@ -334,7 +334,7 @@ test_beta <- function(data, X, id, LPMfit){
   
   W <- beta^2/diag(inv_H)[-1]      
   se <- sqrt(diag(inv_H)[-1])
-  p_value <- 1 - pchisq(W, 1)
+  p_value <- pchisq(W, 1, lower.tail = F)
   
   return(list(p_value = p_value, se = se))
 }
@@ -381,7 +381,7 @@ test_beta_louise <- function(data, X, id, LPMfit){
 
   W <- LPMfit$beta[id, ]^2/diag(invI)[-1]
   se <- sqrt(diag(invI)[-1])
-  p_value <- 1 - pchisq(W, 1)
+  p_value <- pchisq(W, 1, lower.tail = F)
 
   return(list(p_value = p_value, se = se))
 }
