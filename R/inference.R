@@ -347,8 +347,16 @@ test_beta_louise <- function(data, X, id, LPMfit){
   D <- ncol(X)
 
   current_X <- as.matrix(cbind(rep(1, nrow(data_X)), data_X[, 3:(D+1)]))
-  alpha <- LPMfit$alpha[id]
-  beta <- LPMfit$beta[id, ]
+  
+  if (length(LPMfit$alpha) == 1){
+    alpha <- LPMfit$alpha
+    beta <- LPMfit$beta
+  }
+  else{
+    alpha <- LPMfit$alpha[id]
+    beta <- LPMfit$beta[id, ]
+  }
+
   Pvalue <- data_X[, 2]
 
   Xbeta <- as.vector(current_X%*%(as.matrix(beta)))
